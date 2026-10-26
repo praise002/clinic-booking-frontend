@@ -3,8 +3,9 @@ import { useState } from 'react'
 import { request } from '../api.js'
 import { lookupErrorMessage } from '../messages.js'
 import BookingRow from './BookingRow.jsx'
+import CancelButton from './CancelButton.jsx'
 
-export default function FindBooking({ allSlots }) {
+export default function FindBooking({ allSlots, onCancelled }) {
   const [bookingId, setBookingId] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -24,6 +25,12 @@ export default function FindBooking({ allSlots }) {
       return
     }
     setBooking(result.data)
+  }
+
+  function handleCancelled(cancelled, notice) {
+    setBooking(cancelled)
+    setError(notice)
+    onCancelled(cancelled)
   }
 
   const slot = booking && allSlots.find((s) => s.id === booking.slot_id)
@@ -51,7 +58,13 @@ export default function FindBooking({ allSlots }) {
           {error}
         </p>
       )}
-      {booking && <BookingRow booking={booking} slot={slot} />}
+      {booking && (
+        <BookingRow booking={booking} slot={slot}>
+          {booking.status === 'confirmed' && (
+            <CancelButton booking={booking} onCancelled={handleCancelled} />
+          )}
+        </BookingRow>
+      )}
     </section>
   )
 }

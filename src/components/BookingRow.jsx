@@ -24,7 +24,8 @@ function CopyButton({ text }) {
 
 // One booking: the id first (it's the handle for finding it again), then the details.
 // `slot` comes from the page's slot list; it can be missing after a reset.
-export default function BookingRow({ booking, slot }) {
+// `children` holds actions for the row, such as the cancel button.
+export default function BookingRow({ booking, slot, children }) {
   const cancelled = booking.status === 'cancelled'
 
   return (
@@ -48,6 +49,7 @@ export default function BookingRow({ booking, slot }) {
           <span className={`label${cancelled ? '' : ' label-success'}`}>{booking.status}</span>
         </dd>
       </dl>
+      {children}
     </div>
   )
 }

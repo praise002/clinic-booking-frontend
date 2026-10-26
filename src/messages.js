@@ -43,6 +43,13 @@ export function lookupErrorMessage(result) {
   return "Couldn't look that booking up. Please try again."
 }
 
+export function cancelErrorMessage(result) {
+  if (unreachable(result)) return UNREACHABLE
+  if (result.status === 409) return 'This booking is already cancelled.'
+  if (result.status === 404) return 'No booking with that id.'
+  return "The cancellation didn't go through. Please try again."
+}
+
 export function slotsErrorMessage(result) {
   if (unreachable(result)) return UNREACHABLE
   return "Couldn't load the slots. Please try again."

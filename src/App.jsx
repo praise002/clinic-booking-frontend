@@ -15,6 +15,8 @@ export default function App() {
   // Bumped on every refresh so a filtered slot list re-fetches too.
   const [slotsVersion, setSlotsVersion] = useState(0)
   const [selectedSlot, setSelectedSlot] = useState(null)
+  // The latest booking cancelled anywhere on the page, so every view of it can follow.
+  const [cancelledBooking, setCancelledBooking] = useState(null)
 
   const refreshSlots = useCallback(async () => {
     setSlotsLoading(true)
@@ -38,6 +40,11 @@ export default function App() {
     refreshSlots()
   }
 
+  function handleCancelled(booking) {
+    setCancelledBooking(booking)
+    refreshSlots()
+  }
+
   return (
     <main className="page">
       <header>
@@ -53,8 +60,13 @@ export default function App() {
         selectedSlot={selectedSlot}
         onSelect={setSelectedSlot}
       />
-      <BookingForm slot={selectedSlot} onBooked={handleBooked} onSlotsStale={refreshSlots} />
-      <FindBooking allSlots={allSlots} />
+      <BookingForm
+        slot={selectedSlot}
+        onBooked={handleBooked}
+        onSlotsStale={refreshSlots}
+        cancelledBooking={cancelledBooking}
+      />
+      <FindBooking allSlots={allSlots} onCancelled={handleCancelled} />
       <AdminReset onReset={refreshSlots} />
     </main>
   )

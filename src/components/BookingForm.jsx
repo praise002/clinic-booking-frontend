@@ -5,7 +5,7 @@ import { formatSlotTime } from '../format.js'
 import { bookingErrorMessage, slotIsGone } from '../messages.js'
 import BookingRow from './BookingRow.jsx'
 
-export default function BookingForm({ slot, onBooked, onSlotsStale }) {
+export default function BookingForm({ slot, onBooked, onSlotsStale, cancelledBooking }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [sending, setSending] = useState(false)
@@ -19,6 +19,16 @@ export default function BookingForm({ slot, onBooked, onSlotsStale }) {
       setError('')
     }
   }, [slot])
+
+  // The confirmed booking was cancelled elsewhere on the page: show it as it is now.
+  useEffect(() => {
+    if (!cancelledBooking) return
+    setConfirmation((current) =>
+      current?.booking.id === cancelledBooking.id
+        ? { ...current, booking: { ...current.booking, status: 'cancelled' } }
+        : current,
+    )
+  }, [cancelledBooking])
 
   async function submit(event) {
     event.preventDefault()
@@ -43,8 +53,15 @@ export default function BookingForm({ slot, onBooked, onSlotsStale }) {
       <h2>Book a Slot</h2>
 
       {confirmation && (
-        <div className="message success" role="status">
-          <p className="row-title">You're booked. Keep your booking id to find it later.</p>
+        <div
+          className={`message${confirmation.booking.status === 'cancelled' ? '' : ' success'}`}
+          role="status"
+        >
+          <p className="row-title">
+            {confirmation.booking.status === 'cancelled'
+              ? 'This booking has been cancelled. The slot is free again.'
+              : "You're booked. Keep your booking id to find it later."}
+          </p>
           <BookingRow booking={confirmation.booking} slot={confirmation.slot} />
         </div>
       )}
