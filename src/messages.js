@@ -30,6 +30,10 @@ export function slotIsGone(result) {
 export function bookingErrorMessage(result) {
   if (unreachable(result)) return UNREACHABLE
   if (result.status === 409) return 'Someone just booked this slot. Please pick another.'
+  if (result.status === 429) {
+    const seconds = result.retryAfter ?? 60
+    return `Too many booking attempts for this email. Please wait ${seconds} second${seconds === 1 ? '' : 's'} and try again.`
+  }
   if (result.status === 404) return 'This slot no longer exists. Please pick another.'
   if (result.status === 400) {
     return BOOKING_400[result.data?.error] ?? 'Please check your details and try again.'
