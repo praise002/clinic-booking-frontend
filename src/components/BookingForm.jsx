@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 
 import { request } from '../api.js'
 import { formatSlotTime } from '../format.js'
-import { bookingErrorMessage } from '../messages.js'
+import { bookingErrorMessage, slotIsGone } from '../messages.js'
 import BookingRow from './BookingRow.jsx'
 
-export default function BookingForm({ slot, onBooked }) {
+export default function BookingForm({ slot, onBooked, onSlotsStale }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [sending, setSending] = useState(false)
@@ -31,6 +31,7 @@ export default function BookingForm({ slot, onBooked }) {
     if (!result.ok) {
       // The inputs keep their values so the patient can correct and retry.
       setError(bookingErrorMessage(result))
+      if (slotIsGone(result)) onSlotsStale()
       return
     }
     setConfirmation({ booking: result.data, slot })
@@ -51,7 +52,8 @@ export default function BookingForm({ slot, onBooked }) {
       {!slot && !confirmation && <p className="muted">Choose an available slot above.</p>}
 
       {slot && (
-        <form onSubmit={submit} className="form">
+        // noValidate: the API is the one judge of the details, so every message comes from it.
+        <form onSubmit={submit} className="form" noValidate>
           <p>
             <span className="row-title">{slot.provider}</span>
             <br />

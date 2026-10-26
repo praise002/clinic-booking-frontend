@@ -53,7 +53,7 @@ export default function App() {
         selectedSlot={selectedSlot}
         onSelect={setSelectedSlot}
       />
-      <BookingForm slot={selectedSlot} onBooked={handleBooked} />
+      <BookingForm slot={selectedSlot} onBooked={handleBooked} onSlotsStale={refreshSlots} />
       <FindBooking allSlots={allSlots} />
       <AdminReset onReset={refreshSlots} />
     </main>
