@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.vercel/
+
+# Local credentials (server-side only: never VITE_-prefixed)
+.env
+.env.*
+!.env.example
