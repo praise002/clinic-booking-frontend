@@ -50,6 +50,12 @@ export function cancelErrorMessage(result) {
   return "The cancellation didn't go through. Please try again."
 }
 
+export function listErrorMessage(result) {
+  if (unreachable(result)) return UNREACHABLE
+  if (result.status === 400) return 'Please enter your email.'
+  return "Couldn't load your bookings. Please try again."
+}
+
 export function slotsErrorMessage(result) {
   if (unreachable(result)) return UNREACHABLE
   return "Couldn't load the slots. Please try again."

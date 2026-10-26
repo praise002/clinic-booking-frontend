@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { request } from '../api.js'
 import { lookupErrorMessage } from '../messages.js'
 import BookingRow from './BookingRow.jsx'
 import CancelButton from './CancelButton.jsx'
 
-export default function FindBooking({ allSlots, onCancelled }) {
+export default function FindBooking({ allSlots, cancelledBooking, onCancelled }) {
   const [bookingId, setBookingId] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -26,6 +26,14 @@ export default function FindBooking({ allSlots, onCancelled }) {
     }
     setBooking(result.data)
   }
+
+  // Cancelled in another section of the page: show it as it is now.
+  useEffect(() => {
+    if (!cancelledBooking) return
+    setBooking((current) =>
+      current?.id === cancelledBooking.id ? { ...current, status: 'cancelled' } : current,
+    )
+  }, [cancelledBooking])
 
   function handleCancelled(cancelled, notice) {
     setBooking(cancelled)

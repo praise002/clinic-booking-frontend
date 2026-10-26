@@ -4,6 +4,7 @@ import { request } from './api.js'
 import AdminReset from './components/AdminReset.jsx'
 import BookingForm from './components/BookingForm.jsx'
 import FindBooking from './components/FindBooking.jsx'
+import MyBookings from './components/MyBookings.jsx'
 import SlotsSection from './components/SlotsSection.jsx'
 import { slotsErrorMessage } from './messages.js'
 
@@ -66,7 +67,16 @@ export default function App() {
         onSlotsStale={refreshSlots}
         cancelledBooking={cancelledBooking}
       />
-      <FindBooking allSlots={allSlots} onCancelled={handleCancelled} />
+      <FindBooking
+        allSlots={allSlots}
+        cancelledBooking={cancelledBooking}
+        onCancelled={handleCancelled}
+      />
+      <MyBookings
+        allSlots={allSlots}
+        cancelledBooking={cancelledBooking}
+        onCancelled={handleCancelled}
+      />
       <AdminReset onReset={refreshSlots} />
     </main>
   )

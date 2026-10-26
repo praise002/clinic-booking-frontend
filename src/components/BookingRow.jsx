@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { formatSlotTime } from '../format.js'
 
-function CopyButton({ text }) {
+export function CopyButton({ text }) {
   const [copied, setCopied] = useState(false)
 
   async function copy() {

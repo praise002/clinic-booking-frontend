@@ -7,7 +7,7 @@ import { cancelErrorMessage } from '../messages.js'
 // cancelled (here, or already in another tab) it calls onCancelled(booking, notice) so the
 // owner can update the row; the notice outlives this button, which disappears with the
 // confirmed status.
-export default function CancelButton({ booking, onCancelled }) {
+export default function CancelButton({ booking, onCancelled, compact = false }) {
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
 
@@ -27,9 +27,14 @@ export default function CancelButton({ booking, onCancelled }) {
   }
 
   return (
-    <div className="actions">
-      <button type="button" className="button-secondary" onClick={cancel} disabled={sending}>
-        {sending ? 'Cancelling…' : 'Cancel booking'}
+    <div className={compact ? 'actions actions-compact' : 'actions'}>
+      <button
+        type="button"
+        className={`button-secondary${compact ? ' button-small' : ''}`}
+        onClick={cancel}
+        disabled={sending}
+      >
+        {sending ? 'Cancelling…' : compact ? 'Cancel' : 'Cancel booking'}
       </button>
       {error && (
         <p className="message error" role="alert">

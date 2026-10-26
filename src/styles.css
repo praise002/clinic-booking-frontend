@@ -202,6 +202,42 @@ button:disabled {
   font-weight: 600;
 }
 
+/* Compact booking rows (My Bookings) */
+
+.row-main {
+  min-width: 0;
+}
+
+.row-sub {
+  font-weight: 400;
+}
+
+.row-id {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.row-id code {
+  font-size: 0.8125rem;
+  word-break: break-all;
+}
+
+.row-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.actions-compact {
+  margin-top: 0;
+  justify-items: end;
+}
+
 /* Bookings */
 
 .booking {
