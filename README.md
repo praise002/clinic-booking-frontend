@@ -2,7 +2,7 @@
 
 One plain page for the [clinic booking API](../clinic-booking-api): see slots, book one and get the confirmation, find a booking by id, see all your bookings by email (10 at a time), cancel a booking, and (with the API key) reset the slots.
 
-**Live:** `<VERCEL_URL>` · **API:** `<RAILWAY_URL>`
+**Live:** `<WEB_URL>` · **API:** `<API_URL>`
 
 ## The API key never reaches the browser
 
