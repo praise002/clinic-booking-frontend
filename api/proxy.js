@@ -1,4 +1,5 @@
-// Vercel function for every /api/* request: the page's only way to reach the booking API.
+// Vercel function for every /api/* request (vercel.json rewrites them all here): the page's
+// only way to reach the booking API.
 // API_BASE_URL and API_KEY are server-side Vercel env vars; neither ever reaches the browser.
 import { forward } from './_proxy.js'
 

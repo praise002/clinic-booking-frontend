@@ -1,5 +1,5 @@
 // Forwards a browser request for /api/<path> to the booking API, adding the server's API key.
-// Used by the Vercel function (api/[...path].js) in production and by the Vite dev server
+// Used by the Vercel function (api/proxy.js) in production and by the Vite dev server
 // (vite.config.js) locally, so both run exactly this code.
 // The leading underscore stops Vercel from deploying this file as a function of its own.
 
@@ -12,9 +12,20 @@ function isReset(path) {
   return path.replace(/\/+/g, '/').replace(/\/$/, '').toLowerCase() === '/reset'
 }
 
+// On Vercel, vercel.json rewrites /api/<path> to /api/proxy?__path=<path> (a catch-all file
+// route only works in Next.js), so the original path arrives in __path.
+const REWRITTEN_PATH_PARAM = '__path'
+
+function upstreamPath(url) {
+  const rewritten = url.searchParams.get(REWRITTEN_PATH_PARAM)
+  if (rewritten === null) return url.pathname.replace(/^\/api/, '') || '/'
+  url.searchParams.delete(REWRITTEN_PATH_PARAM)
+  return `/${rewritten.replace(/^\/+/, '')}`
+}
+
 export async function forward(request, { apiBaseUrl, apiKey, fetchImpl = fetch }) {
   const url = new URL(request.url)
-  const path = url.pathname.replace(/^\/api/, '') || '/'
+  const path = upstreamPath(url)
 
   const headers = new Headers()
   for (const name of REQUEST_HEADERS) {

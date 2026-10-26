@@ -89,3 +89,20 @@ test('an unreachable API is a 502 in the error shape', async () => {
   assert.equal(response.status, 502)
   assert.deepEqual(await response.json(), { error: 'booking service unreachable' })
 })
+
+test('a rewritten request (/api/proxy?__path=…) goes to the original path, query kept', async () => {
+  // vercel.json rewrites /api/<anything> to /api/proxy?__path=<anything>, keeping the query.
+  const upstream = fakeUpstream()
+  await call('/api/proxy?__path=bookings%2Fabc-123&email=a%40b.io&limit=10', {}, upstream)
+
+  assert.equal(upstream.calls[0].url, 'http://api.test/bookings/abc-123?email=a%40b.io&limit=10')
+  assert.equal(upstream.calls[0].init.headers.get('x-api-key'), SERVER_KEY)
+})
+
+test('a rewritten reset still carries only the typed key', async () => {
+  const upstream = fakeUpstream()
+  await call('/api/proxy?__path=reset', { method: 'POST', body: '{}', headers: { 'X-API-Key': 'typed' } }, upstream)
+
+  assert.equal(upstream.calls[0].url, 'http://api.test/reset')
+  assert.equal(upstream.calls[0].init.headers.get('x-api-key'), 'typed')
+})
